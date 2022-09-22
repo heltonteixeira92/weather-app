@@ -1,6 +1,7 @@
 // variáveis e seleção de elementos
 const apiKey = "ddb2bfc8ed2b7133fbc5e3f3e780cf97";
 const apiCountryURL = "https://countryflagsapi.com/png/";
+const apiUnsplash = "https://source.unsplash.com/1600x900/?";
 
 const cityInput = document.querySelector("#city-input");
 const searchBtn = document.querySelector("#search");
@@ -76,6 +77,9 @@ const showWeatherData = async (city) => {
     countryElement.setAttribute("src", apiCountryURL + data.sys.country);
     humidityElement.innerText = `${data.main.humidity}%`;
     windElement.innerText = `${data.wind.speed}km/h`;
+    
+    // change bg img
+    document.body.style.backgroundImage = `url("${apiUnsplash + city}")`;
 
     weatherContainer.classList.remove("hide");
 };
