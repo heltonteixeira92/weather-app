@@ -15,24 +15,56 @@ const windElement = document.querySelector("#wind span");
 
 const weatherContainer = document.querySelector("#weather-data");
 
+const errorMessageContainer = document.querySelector("#error-message");
+const loader = document.querySelector("#loader");
+
+const suggestionContainer = document.querySelector("#suggestions");
+const suggestionButtons = document.querySelectorAll("#suggestions button");
+
+
+// loader
+const toggleLoader = () => {
+    loader.classList.toggle("hide");
+};
 
 // Funções
 
 const getWeatherData = async(city) => {
+    toggleLoader();
 
     const apiweatherURL = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${apiKey}&lang=pt_br`;
 
     const res = await fetch(apiweatherURL)
     const data = await res.json();
 
+    toggleLoader();
+
     return data
 
-}
 
+};
+
+// tratamento de erro
+const showErrorMessage = () => {
+    errorMessageContainer.classList.remove("hide");
+};
+
+const hideInformation = () => {
+    errorMessageContainer.classList.add("hide");
+    weatherContainer.classList.add("hide");
+
+    suggestionContainer.classList.add("hide");
+
+};
 
 const showWeatherData = async (city) => {
-   
+    hideInformation();
     const data = await getWeatherData(city);
+
+    if (data.cod == "404") {
+        showErrorMessage();
+        return;
+    }
 
     cityElement.innerText = data.name;
     tempElement.innerText = parseInt(data.main.temp);
@@ -64,3 +96,13 @@ cityInput.addEventListener("keyup", (e) => {
         showWeatherData(city);
     }
 });
+
+
+// Sugestões
+suggestionButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const city = btn.getAttribute("id");
+  
+      showWeatherData(city);
+    });
+  });
